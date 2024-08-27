@@ -1,28 +1,42 @@
 import React, { useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
-import { Link, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
-import rigoImageUrl from "../../img/rigo-baby.jpg";
 
-export const Single = props => {
+export const Single = () => {
 	const { store, actions } = useContext(Context);
-	const params = useParams();
+	const location = useLocation();
+	const queryParams = new URLSearchParams(location.search);
+	const token = queryParams.get('token');
+	const [password, setPassword] = useState('')
+	const [user, setUser] = useState()
+	const navigate = useNavigate()
+
+	useEffect(async () => {
+		if (token) {
+			const resp = await actions.checkAuth(token);
+			setUser(prev => prev = resp.user)
+		}
+	}, [token]);
+
+
+	const handleClick = async () => {
+		const resp = await actions.updatePassword(password, token)
+		if (resp.success) {
+			alert('vamos a logearnos ahora!')
+			navigate('/')
+		}
+	}
 
 	return (
-		<div className="jumbotron">
-			<h1 className="display-4">This will show the demo element: {store.demo[params.theid].title}</h1>
-			<img src={rigoImageUrl} />
-			<hr className="my-4" />
-
-			<Link to="/">
-				<span className="btn btn-primary btn-lg" href="#" role="button">
-					Back home
-				</span>
-			</Link>
+		<div className="card w-75">
+			<h2>Cambio de contraseña</h2>
+			<p>Hola {user && user.email}, vamos a cambiar la contraseña</p>
+			<input
+				type="text"
+				onChange={e => setPassword(e.target.value)}
+				value={password}
+			/>
+			<button onClick={handleClick}>change password</button>
 		</div>
 	);
-};
-
-Single.propTypes = {
-	match: PropTypes.object
 };

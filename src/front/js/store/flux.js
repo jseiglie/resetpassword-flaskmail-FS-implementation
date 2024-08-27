@@ -16,11 +16,109 @@ const getState = ({ getStore, getActions, setStore }) => {
 			]
 		},
 		actions: {
+			updatePassword: async (password, token) => {
+				try{
+					// fetching data from the backend
+					const resp = await fetch(process.env.BACKEND_URL + "/api/password_update", {
+						method: 'PUT',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${token}`
+						},
+						body: JSON.stringify({password})
+					})
+					if (resp.status!=200) return false
+					const data = await resp.json()
+					console.log(data)
+					return data;
+				}catch(error){
+					console.log("Error loading message from backend", error)
+				}
+			},
+			sendResetEmail: async (email) => {
+				try{
+					// fetching data from the backend
+					const resp = await fetch(process.env.BACKEND_URL + "/api/check_mail", {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({email})
+					})
+					if (resp.status!=200) return false
+					const data = await resp.json()
+					console.log(data)
+					return data;
+				}catch(error){
+					console.log("Error loading message from backend", error)
+				}
+			},
 			// Use getActions to call a function within a fuction
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
 			},
-
+			logout: ()=> {
+				localStorage.removeItem('token')
+				setStore({user: null, token: null})
+				return true
+			},
+			checkAuth: async(token) => {
+				try{
+					// fetching data from the backend
+					const resp = await fetch(process.env.BACKEND_URL + "/api/token", {
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${token}`
+						},
+						method: 'GET',
+					})
+					if (resp.status!=200) return false
+					const data = await resp.json()
+					console.log(data)
+					return data;
+				}catch(error){
+					console.log("Error loading message from backend", error)
+				}
+			},
+			login: async (formData) => {
+				try{
+					// fetching data from the backend
+				
+					const resp = await fetch(process.env.BACKEND_URL + "/api/login", {
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						method: 'POST',
+						body: JSON.stringify(formData)
+					})
+					const data = await resp.json()
+					setStore({ user: data.user, token: data.token })
+					localStorage.setItem('token', data.token)
+					// don't forget to return something, that is how the async resolves
+					return data;
+				}catch(error){
+					console.log("Error loading message from backend", error)
+				}
+			},
+			register: async (formData) => {
+				try{
+					// fetching data from the backend
+					const resp = await fetch(process.env.BACKEND_URL + "/api/signup", {
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						method: 'POST',
+						body: JSON.stringify(formData)
+					})
+					const data = await resp.json()
+					setStore({ user: data.user, token: data.token })
+					localStorage.setItem('token', data.token)
+					// don't forget to return something, that is how the async resolves
+					return data;
+				}catch(error){
+					console.log("Error loading message from backend", error)
+				}
+			},
 			getMessage: async () => {
 				try{
 					// fetching data from the backend
