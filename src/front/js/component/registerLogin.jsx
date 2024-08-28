@@ -25,8 +25,13 @@ export const RegisterLogin = () => {
             <input type="text" name="email" onChange={handleChange} />
             <input type="password" name="password" onChange={handleChange} />
             <input type="submit" value={`${login ? 'Login' : 'Sign up'}`} />
-
+        {
+            !login? 
             <p>Ya tienes una cuenta? Inicia session <span onClick={() => setLogin(!login)}>AQUI</span></p>
+            :
+            <p>No tienes una cuenta?registrate <span onClick={() => setLogin(!login)}>AQUI</span></p>
+            
+        }
         </form>
     )
 }

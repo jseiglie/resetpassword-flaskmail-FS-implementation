@@ -83,15 +83,18 @@ def handle_protected():
         return  jsonify({'success': True, 'msg': 'Has logrado acceder a una ruta protegida '})
     return jsonify({'success': False, 'msg': 'Bad token'})
 
+
+#funcion para verificar que el correo esta en la base de datos y enviar el correo de recuperacion de estarlo
 @api.route("/check_mail", methods=['POST'])
 def check_mail():
     try:
         data = request.json
-        print(data)
+        #buscamos el correo en la base de datos y almacenamos el resultado en la variable user
         user = User.query.filter_by(email=data['email']).first()
-        print(user)
+        #si no se encuentra, se devuelve que el correo no se ha encontrado
         if not user:
             return jsonify({'success': False, 'msg': 'email not found'}),404
+        #creamos el token que se va a enviar y necesario para la recuperacion de la contraseña 
         token = create_access_token(identity=user.id)
         result = send_email(data['email'], token)
         print(result)
@@ -100,17 +103,23 @@ def check_mail():
         print('error: '+ e)
         return jsonify({'success': False, 'msg': 'something went wrong'})
 
+
+#ruta para actualizar el password. Se consume desde la vista para hacer el reset en el front
 @api.route('/password_update', methods=['PUT'])
 @jwt_required()
 def password_update():
     try:
         data = request.json
+        #extraemos el id del token que creamos en la linea 98
         id = get_jwt_identity()
+        #buscamos usuario por id
         user = User.query.get(id)
+        #actualizamos password del usuario
         user.password = data['password']
+        #alacenamos los cambios
         db.session.commit()
         return jsonify({'success': True, 'msg': 'Contraseña actualizada exitosamente, intente iniciar sesion'}), 200
     except Exception as e:
         db.session.rollback()
-        print('error: '+ e)
-        return jsonify({'success': False, 'msg': 'something went wrong'})
+        print (f"Error al enviar el correo: {str(e)}")
+        return jsonify({'success': False, 'msg': f"Error al enviar el correo: {str(e)}"})

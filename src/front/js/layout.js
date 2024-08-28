@@ -26,6 +26,7 @@ const Layout = () => {
                     <Navbar />
                     <Routes>
                         <Route element={<Home />} path="/" />
+                        {/* ruta para recuperar la contraseña */}
                         <Route element={<Single />} path="/reset" />
                         
                         <Route element={<Demo />} path="/demo" />

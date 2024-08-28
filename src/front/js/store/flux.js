@@ -17,8 +17,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 		},
 		actions: {
 			updatePassword: async (password, token) => {
+				//recibimos password nuevo  y el token (lo necesitamos ya que es una ruta protegida la que vamos a consumir y porque del token sacaremos la identidad del usuario)
 				try{
-					// fetching data from the backend
 					const resp = await fetch(process.env.BACKEND_URL + "/api/password_update", {
 						method: 'PUT',
 						headers: {
@@ -36,8 +36,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 			sendResetEmail: async (email) => {
+				//recibimos el correo al que le vamos a enviar el reset del password 
 				try{
-					// fetching data from the backend
 					const resp = await fetch(process.env.BACKEND_URL + "/api/check_mail", {
 						method: 'POST',
 						headers: {

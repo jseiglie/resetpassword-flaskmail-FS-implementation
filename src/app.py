@@ -30,7 +30,7 @@ jwt = JWTManager(app)
 
 
 
-#----------------------------------------------------------------------------------------------------------------------JWT Config
+#----------------------------------------------------------------------------------------------------------------------EMAIL
 app.config['MAIL_SERVER']= 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = os.getenv("EMAIL_USERNAME")
@@ -41,23 +41,9 @@ app.config['MAIL_DEFAULT_SENDER'] = ('Pepe', 'pepe@pepe.pe')
 mail.init_app(app)  # Inicializa mail con la aplicación
 
 
-@app.route('/api/mail/<address>', methods=['POST', 'GET'])
-def send_email(address):
-    try:
-   
-        msg = Message("Information", #asunto del correo
-                      recipients=[address]) 
 
-        # Definir cuerpo del correo
-        msg.body = "Hola, este es un correo de prueba enviado desde Flask."
-        msg.html = "<p>Hola, este es un <b>correo de prueba</b> enviado desde Flask.</p>"
 
-        # Enviar el correo
-        mail.send(msg)
 
-        return "Correo enviado exitosamente!"
-    except Exception as e:
-        return f"Error al enviar el correo: {str(e)}"
 
 
 # database condiguration

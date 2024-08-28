@@ -13,9 +13,9 @@ export const Home = () => {
 		navigate('/')
 	}
 
-const handleClick = () => {
-	actions.sendResetEmail(email)
-}
+	const handleClick = () => {
+		actions.sendResetEmail(email)
+	}
 	return (
 		<div className="text-center mt-5">
 			<RegisterLogin />
@@ -25,25 +25,25 @@ const handleClick = () => {
 				<>
 					<p>Estas logeado!!!!</p>
 					<Link to={'/demo'}>
-					ve a demo
+						ve a demo
 					</Link>
 
-					o 
+					o
 
 					<button onClick={handleLogout}>log out </button>
 				</>
 				:
 				''
 			}
-<p>recuperar contraseña</p>
-<input 
-type="text"
-value={email}
-onChange={e=>setEmail(e.target.value)}
-/>
-<button onClick={handleClick}>
-	reset
-</button>
+			<p>recuperar contraseña</p>
+			<input
+				type="text"
+				value={email}
+				onChange={e => setEmail(e.target.value)}
+			/>
+			<button onClick={handleClick}>
+				reset
+			</button>
 		</div>
 	);
 };
